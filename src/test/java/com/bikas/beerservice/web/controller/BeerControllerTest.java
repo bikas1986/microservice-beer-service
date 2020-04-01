@@ -12,6 +12,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -82,7 +83,8 @@ class BeerControllerTest {
 								fields.withPath("beerStyle").description("Beer Style").type(BeerStyleEnum.class),
 								fields.withPath("upc").description("UPC of Beer").type(Long.class),
 								fields.withPath("price").description("Price").type(BigDecimal.class),
-								fields.withPath("quantityOnHand").description("Quantity On hand").type(Integer.class)
+								fields.withPath("quantityOnHand").description("Quantity On hand").type(Integer.class),
+								fields.withPath("myLocalDate").description("Local date").type(LocalDate.class)
 						)));
 	}
 
@@ -107,7 +109,8 @@ class BeerControllerTest {
 								fields.withPath("beerStyle").description("Style of Beer"),
 								fields.withPath("upc").description("Beer UPC").attributes(),
 								fields.withPath("price").description("Beer Price"),
-								fields.withPath("quantityOnHand").ignored()
+								fields.withPath("quantityOnHand").ignored(),
+								fields.withPath("myLocalDate").ignored()
 						)));
 	}
 

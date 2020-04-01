@@ -17,8 +17,10 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.bikas.beerservice.bootstrao.BeerLoader;
 import com.bikas.beerservice.domain.Beer;
 import com.bikas.beerservice.repository.BeerRepository;
+import com.bikas.beerservice.services.BeerService;
 import com.bikas.beerservice.web.model.BeerStyleEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,20 +48,20 @@ class BeerControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
-	
-	@Autowired
-    ObjectMapper objectMapper;
 
 	@MockBean
-	BeerRepository beerRepository;
-	
+	BeerService beerService;
+
+	@Autowired
+	ObjectMapper objectMapper;
+
 	@BeforeEach
 	void setUp() throws Exception {
 	}
 
 	@Test
 	void testGetBeerById() throws Exception {
-		given(beerRepository.findById(any())).willReturn(Optional.of(Beer.builder().build()));
+		given(beerService.getBeerById(any())).willReturn(getValidBeerDto());
 
 		ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 		mockMvc.perform(
@@ -81,7 +83,7 @@ class BeerControllerTest {
 								fields.withPath("lastModifiedDate").description("Date Updated").type(OffsetDateTime.class),
 								fields.withPath("beerName").description("Beer Name").type(String.class),
 								fields.withPath("beerStyle").description("Beer Style").type(BeerStyleEnum.class),
-								fields.withPath("upc").description("UPC of Beer").type(Long.class),
+								fields.withPath("upc").description("UPC of Beer").type(String.class),
 								fields.withPath("price").description("Price").type(BigDecimal.class),
 								fields.withPath("quantityOnHand").description("Quantity On hand").type(Integer.class),
 								fields.withPath("myLocalDate").description("Local date").type(LocalDate.class)
@@ -130,7 +132,7 @@ class BeerControllerTest {
 				.beerName("My Beer")
 				.beerStyle(BeerStyleEnum.ALE)
 				.price(new BigDecimal("2.99"))
-				.upc(123123123123L)
+				.upc(BeerLoader.BEER_1_UPC)
 				.build();
 	}
 

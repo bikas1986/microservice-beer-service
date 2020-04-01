@@ -44,9 +44,8 @@ public class BeerDto {
     @NotNull
     private BeerStyleEnum beerStyle;
 
-    @Positive
     @NotNull
-    private Long upc;
+    private String upc;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING) //How to serialize the property.. here the price
     //will be serialized to String instead of Number

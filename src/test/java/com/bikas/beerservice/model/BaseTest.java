@@ -1,6 +1,6 @@
 package com.bikas.beerservice.model;
 
-import com.bikas.beerservice.bootstrao.BeerLoader;
+import com.bikas.beerservice.bootstrap.BeerLoader;
 import com.bikas.beerservice.web.model.BeerDto;
 import com.bikas.beerservice.web.model.BeerStyleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ public class BaseTest {
                 .lastModifiedDate(OffsetDateTime.now())
                 .price(new BigDecimal("12.99"))
                 .upc(BeerLoader.BEER_1_UPC)
-                .myLocalDate(LocalDate.now())
+               // .myLocalDate(LocalDate.now())
                 .build();
     }
 }

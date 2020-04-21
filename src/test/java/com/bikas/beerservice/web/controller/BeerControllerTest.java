@@ -2,6 +2,7 @@ package com.bikas.beerservice.web.controller;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -14,17 +15,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.bikas.beerservice.bootstrao.BeerLoader;
-import com.bikas.beerservice.domain.Beer;
-import com.bikas.beerservice.repository.BeerRepository;
+import com.bikas.beerservice.bootstrap.BeerLoader;
 import com.bikas.beerservice.services.BeerService;
+import com.bikas.beerservice.web.mappers.BeerMapper;
+import com.bikas.beerservice.web.mappers.BeerMapperImpl_;
 import com.bikas.beerservice.web.model.BeerStyleEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -40,10 +41,15 @@ import com.bikas.beerservice.web.model.BeerDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 
+/* //Spring RestDocs
 @ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs
 @WebMvcTest(BeerController.class)
 @ComponentScan(basePackages = "com.bikas.beerservice.web.mappers")
+ */
+
+//@ComponentScan(basePackages = "com.bikas.beerservice.web.mappers")
+@WebMvcTest(BeerController.class)
 class BeerControllerTest {
 
 	@Autowired
@@ -52,16 +58,65 @@ class BeerControllerTest {
 	@MockBean
 	BeerService beerService;
 
+	@MockBean
+	BeerMapper beerMapper;
+
 	@Autowired
 	ObjectMapper objectMapper;
 
 	@BeforeEach
 	void setUp() throws Exception {
 	}
+	@Test
+	void getBeerById() throws Exception {
+
+		given(beerService.getBeerById(any(), anyBoolean())).willReturn(getValidBeerDto());
+
+		mockMvc.perform(get("/api/v1/beer/" + UUID.randomUUID().toString()).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+	}
 
 	@Test
+	void saveNewBeer() throws Exception {
+
+		BeerDto beerDto = getValidBeerDto();
+		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
+
+		given(beerService.saveNewBeer(any())).willReturn(getValidBeerDto());
+
+		mockMvc.perform(post("/api/v1/beer/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(beerDtoJson))
+				.andExpect(status().isCreated());
+	}
+
+	@Test
+	void updateBeerById() throws Exception {
+		given(beerService.updateBeer(any(), any())).willReturn(getValidBeerDto());
+
+		BeerDto beerDto = getValidBeerDto();
+		String beerDtoJson = objectMapper.writeValueAsString(beerDto);
+
+		mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID().toString())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(beerDtoJson))
+				.andExpect(status().isNoContent());
+	}
+
+	BeerDto getValidBeerDto(){
+		return BeerDto.builder()
+				.beerName("My Beer")
+				.beerStyle(BeerStyleEnum.ALE)
+				.price(new BigDecimal("2.99"))
+				.upc(BeerLoader.BEER_1_UPC)
+				.build();
+	}
+
+/* //For Spring RestDocs
+	@Test
 	void testGetBeerById() throws Exception {
-		given(beerService.getBeerById(any())).willReturn(getValidBeerDto());
+		given(beerService.getBeerById(any(), anyBoolean())).willReturn(getValidBeerDto());
 
 		ConstrainedFields fields = new ConstrainedFields(BeerDto.class);
 		mockMvc.perform(
@@ -127,14 +182,7 @@ class BeerControllerTest {
                 .andExpect(status().isNoContent());
 	}
 
-	BeerDto getValidBeerDto(){
-		return BeerDto.builder()
-				.beerName("My Beer")
-				.beerStyle(BeerStyleEnum.ALE)
-				.price(new BigDecimal("2.99"))
-				.upc(BeerLoader.BEER_1_UPC)
-				.build();
-	}
+
 
 	private static class ConstrainedFields {
 
@@ -150,5 +198,7 @@ class BeerControllerTest {
 							.descriptionsForProperty(path), ". ")));
 		}
 	}
+
+ */
 }
 

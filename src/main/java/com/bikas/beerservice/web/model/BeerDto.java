@@ -1,5 +1,6 @@
 package com.bikas.beerservice.web.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -21,7 +22,9 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BeerDto {
+public class BeerDto implements Serializable {
+    static final long serialVersionUID = 6812541627958826835L;
+
     //@JsonProperty("beerId")
     @Null
 	private UUID id;

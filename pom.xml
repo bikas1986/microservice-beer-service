@@ -6,8 +6,8 @@
 		<groupId>com.bikas</groupId>
 		<artifactId>microservice-brewery-bom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.bikas</groupId>
 	<artifactId>beer-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -15,7 +15,6 @@
 	<description>Microservices Beer Service</description>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
@@ -33,7 +32,6 @@
 			<artifactId>spring-restdocs-mockmvc</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
